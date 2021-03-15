@@ -27,26 +27,91 @@ path: developers/http-api/models
 /// <reference path="@root/types/models.d.ts#Model" />
 ```
 
-## Get base models { id="GET /models/base" }
+## Models API
 
-```http
-GET {{RIC_BASE_URL}}/api/v1/models/base HTTP/1.1
+```
+// TODO: gen TOC here
 ```
 
-## Get own models { id="GET /models" }
+### Get base models { id="GET /models/base" }
 
 ```http
-GET {{RIC_BASE_URL}}/api/v1/models HTTP/1.1
+GET /models/base HTTP/1.1
 ```
 
-## Create new model { id="POST /models" }
+### Get own models { id="GET /models" }
 
 ```http
-POST {{RIC_BASE_URL}}/api/v1/models HTTP/1.1
-Content-Type: application/json
+GET /models HTTP/1.1
+```
+
+### Create new model { id="POST /models" }
+
+```http
+POST /models HTTP/1.1
 
 {
-    "base": "mqtt"
+    "base": "mqtt",
     "name": "api-test-01",
 }
+```
+
+### Update model { id="PATCH /models/:id" }
+
+```http
+PATCH /models/:id HTTP/1.1
+
+{
+    "name": "api-test-01.00",
+}
+```
+
+### Delete model { id="DELETE /models/:id" }
+
+```http
+DELETE /models/:id HTTP/1.1
+```
+
+## Model nodes API
+
+```
+// TODO: gen TOC here
+```
+
+### Attach model node { id="POST /models/:id/nodes" }
+
+```
+// TODO: additional query params table
+
+- attachTo
+- atIndex
+```
+
+```http
+POST /models/:id/nodes HTTP/1.1
+
+{
+    "id": "floorTemperature",
+    "type": "argument",
+    "name": "Floor Temperature",
+    "unit": "temperature-celsius",
+    "dataType": "number",
+}
+```
+
+### Update model node { id="PATCH /models/:id/nodes/:node" }
+
+```http
+PATCH /models/:id/nodes/:node HTTP/1.1
+
+{
+    "name": "Floor Temperature (in Fahrenheits)",
+    "unit": "temperature-fahrenheit"
+}
+```
+
+### Delete model node { id="DELETE /models/:id/nodes/:node" }
+
+```http
+DELETE /models/:id/nodes/:node HTTP/1.1
 ```
