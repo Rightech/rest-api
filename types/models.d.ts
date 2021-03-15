@@ -27,7 +27,11 @@ export interface ArgumentNode extends BaseNode {
 export interface ActionNode extends BaseNode {
   type: 'action';
   service?: string;
+
+  /** js-doc test 1 */
   command?: string;
+  
+  /** js-doc test 2 */
   params?: unknown;
 }
 
@@ -43,9 +47,6 @@ export interface Model extends BaseItem {
 
   props?: {
     bots?: boolean;
-    helper?: string;
-    prefix?: string;
-    order?: number;
     protocol?: string;
     idPattern?: string;
   };
