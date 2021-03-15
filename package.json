@@ -11,9 +11,16 @@
     "types/*",
     "index.d.ts"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rightech/rest-api.git"
+  },
+  "author": "prohazko@rightech.io",
   "typings": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": ""
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  }
 }

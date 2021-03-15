@@ -64,7 +64,6 @@ export const CODES = {
   "511": "Network Authentication Required",
 };
 
-
 export interface ApiResponse {
   success: boolean;
 }
@@ -104,7 +103,7 @@ export class ApiError extends Error {
     } else {
       this.stack = new Error(message).stack;
     }
-    this.trySetTokenId();
+    //this.trySetTokenId();
   }
 
   trySetTokenId() {
@@ -142,6 +141,7 @@ export class ApiError extends Error {
     return new ApiError(json.message)
       .withCode(statusCode)
       .withTags(json.tags)
+      .withHelper(json.helper || {})
       .withUrl(opts.url);
   }
 }
