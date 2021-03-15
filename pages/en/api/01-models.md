@@ -7,44 +7,28 @@ path: developers/http-api/models
 
 ## Type definitions { #types }
 
-```typescript 
-type BasicNode =  {
-  id: string;
-  name: string;
-  type: 'subsystem' | 'argument' | 'action';
-  active: boolean;
+[JSON Schema](https://github.com/Rightech/rest-api/blob/main/oas3/schemas/models.yaml)
+[Type file](https://github.com/Rightech/rest-api/blob/main/types/models.d.ts)
 
-  children?: ModelNode[];
-  description?: string;
-}
+### Model nodes
 
-export interface ModelNode {
-  id: string;
-  name: string;
-  type: 'subsystem' | 'argument' | 'action';
-  active: boolean;
-
-  children?: ModelNode[];
-  description?: string;
-
-  /* this.type === 'argument */
-  dataType?: string;
-  unit?: string;
-
-  /* this.type === 'action */
-  service?: string;
-  command?: string;
-  params?: object;
-}
-
+```ts
+/// <reference path="@root/types/models.d.ts#BaseNode" />
+/// <reference path="@root/types/models.d.ts#SystemNode" />
+/// <reference path="@root/types/models.d.ts#EventNode" />
+/// <reference path="@root/types/models.d.ts#ArgumentNode" />
+/// <reference path="@root/types/models.d.ts#ActionNode" />
+/// <reference path="@root/types/models.d.ts#ModelNode" />
 ```
 
-## Get base models { #GET_/models/base }
+### Model item
 
+```ts
+/// <reference path="@root/types/models.d.ts#Model" />
+```
 
-## Get own models { #GET_/models }
+## Get base models { id="GET /models/base" }
 
+## Get own models { id="GET /models" }
 
-## Create new model { #POST_/models }
-
-
+## Create new model { id="POST /models" }

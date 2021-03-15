@@ -1,55 +1,52 @@
 import type { BaseItem } from './base';
 
-export type ModelNode = BasicNode
-  | ArgumentNode
-  | ActionNode
-  | EventNode;
 
-export interface BasicNode {
+export interface BaseNode {
+  type: string;
   id: string;
   name: string;
   description?: string;
   active: boolean;
-
-  type: 'subsystem' | string;
-
   children?: ModelNode[];
 }
 
-export interface EventNode extends BasicNode {
+export interface SystemNode extends BaseNode {
+  type: 'subsystem';
+}
+
+export interface EventNode extends BaseNode {
   type: 'event';
 }
 
-export type ArgumentDataType = 'number' 
-| 'boolean' 
-| 'string' 
-| string;
-
-export interface ArgumentNode extends BasicNode {
+export interface ArgumentNode extends BaseNode {
   type: 'argument';
-  dataType?: ArgumentDataType;
+  dataType: 'number' | 'boolean' | 'string' | string;
   unit?: string;
 }
 
-export interface ActionNode<T = unknown> extends BasicNode {
+export interface ActionNode extends BaseNode {
   type: 'action';
   service?: string;
   command?: string;
-  params?: T;
+  params?: unknown;
 }
+
+export type ModelNode = BaseNode
+  | SystemNode
+  | EventNode
+  | ArgumentNode
+  | ActionNode;
 
 export interface Model extends BaseItem {
-  base?: string;
-  props: ModelProps;
-
+  base: string;
   data: ModelNode;
-}
 
-export interface ModelProps {
-    bots: boolean;
-    helper: string;
-    prefix: string;
-    order: number;
-    protocol: string;
-    idPattern: string;
-  }
+  props?: {
+    bots?: boolean;
+    helper?: string;
+    prefix?: string;
+    order?: number;
+    protocol?: string;
+    idPattern?: string;
+  };
+}

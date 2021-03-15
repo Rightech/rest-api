@@ -1,3 +1,4 @@
+/** test comment */
 export type ItemId = string;
 
 export interface BaseItem {
