@@ -5,7 +5,7 @@ locale: en
 path: developers/http-api/models
 ---
 
-## Type defenitions { #types }
+## Type definitions { #types }
 
 ```typescript 
 type BasicNode =  {

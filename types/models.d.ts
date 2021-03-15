@@ -20,9 +20,14 @@ export interface EventNode extends BasicNode {
   type: 'event';
 }
 
+export type ArgumentDataType = 'number' 
+| 'boolean' 
+| 'string' 
+| string;
+
 export interface ArgumentNode extends BasicNode {
   type: 'argument';
-  dataType?: 'number' | 'boolean' | 'string' | string;
+  dataType?: ArgumentDataType;
   unit?: string;
 }
 
@@ -35,7 +40,16 @@ export interface ActionNode<T = unknown> extends BasicNode {
 
 export interface Model extends BaseItem {
   base?: string;
-  props: object;
+  props: ModelProps;
 
   data: ModelNode;
 }
+
+export interface ModelProps {
+    bots: boolean;
+    helper: string;
+    prefix: string;
+    order: number;
+    protocol: string;
+    idPattern: string;
+  }
