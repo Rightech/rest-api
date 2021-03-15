@@ -1,6 +1,6 @@
 {
   "name": "@rightech/api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "private": false,
   "main": "index.js",
@@ -21,6 +21,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@types/node": "^14.14.35",
     "typescript": "^4.2.3"
   }
 }
