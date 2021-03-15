@@ -1,0 +1,161 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/rightech/api-v1/1.0.0
+info:
+  version: '1.0.0'
+  title: rightech-iot-api
+  description: Rightech IOT Web Services
+paths:
+  /models:
+    get:
+      description: returns all registered devices
+      operationId: GET /models
+      # parameters:
+      #   - in: query
+      #     name: skip
+      #     description: number of records to skip
+      #     schema:
+      #       type: integer
+      #       format: int32
+      #   - in: query
+      #     name: limit
+      #     description: max number of records to return
+      #     schema:
+      #       type: integer
+      #       format: int32
+      responses:
+        '200':
+          description: All the devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Model'
+                    
+components:
+  schemas:
+    ActionNode: 
+      properties: 
+        active: 
+          type: "boolean"
+        children: 
+          items: 
+            $ref: "#/components/schemas/ModelNode"
+          type: "array"
+        command: 
+          type: "string"
+        description: 
+          type: "string"
+        id: 
+          type: "string"
+        name: 
+          type: "string"
+        params: {}
+        service: 
+          type: "string"
+        type: 
+          enum: 
+            - "action"
+          type: "string"
+      type: "object"
+    ArgumentNode: 
+      properties: 
+        active: 
+          type: "boolean"
+        children: 
+          items: 
+            $ref: "#/components/schemas/ModelNode"
+          type: "array"
+        dataType: 
+          type: "string"
+        description: 
+          type: "string"
+        id: 
+          type: "string"
+        name: 
+          type: "string"
+        type: 
+          enum: 
+            - "argument"
+          type: "string"
+        unit: 
+          type: "string"
+      type: "object"
+    BasicNode: 
+      properties: 
+        active: 
+          type: "boolean"
+        children: 
+          items: 
+            $ref: "#/components/schemas/ModelNode"
+          type: "array"
+        description: 
+          type: "string"
+        id: 
+          type: "string"
+        name: 
+          type: "string"
+        type: 
+          type: "string"
+      type: "object"
+    EventNode: 
+      properties: 
+        active: 
+          type: "boolean"
+        children: 
+          items: 
+            $ref: "#/components/schemas/ModelNode"
+          type: "array"
+        description: 
+          type: "string"
+        id: 
+          type: "string"
+        name: 
+          type: "string"
+        type: 
+          enum: 
+            - "event"
+          type: "string"
+      type: "object"
+    ModelNode: 
+      anyOf: 
+        - 
+          $ref: "#/components/schemas/BasicNode"
+        - 
+          $ref: "#/components/schemas/ArgumentNode"
+        - 
+          $ref: "#/components/schemas/ActionNode"
+        - 
+          $ref: "#/components/schemas/EventNode"
+    Model:      
+      properties: 
+        _at: 
+          type: "number"
+        _id: 
+          type: "string"
+        access: 
+          items: 
+            type: "string"
+          type: "array"
+        base: 
+          type: "string"
+        data: 
+          $ref: "#/components/schemas/ModelNode"
+        description: 
+          type: "string"
+        group: 
+          type: "string"
+        name: 
+          type: "string"
+        owner: 
+          type: "string"
+        props: 
+          additionalProperties: true
+          properties: {}
+          type: "object"
+        time: 
+          type: "number"
+      type: "object"
