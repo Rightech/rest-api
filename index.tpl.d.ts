@@ -1,5 +1,7 @@
 /* ----- api/v1 ----- */
 
+interface BaseItem {}
+
 /// <_include path="@root/types/base.d.ts#ItemId" />
 /// <_include path="@root/types/base.d.ts#BaseItem" />
 
@@ -21,27 +23,6 @@ export interface ApiResponse {
   success: boolean;
 }
 
-export interface ClientOpts {
-  url?: string;
-  token?: string;
-}
-
-export declare class Client {
-  url: string;
-  token: string;
-  constructor(opts: ClientOpts);
-  getDefaultHeaders(): {
-    [k: string]: string;
-  };
-  get<T = unknown>(path: string, query?: {}): Promise<T>;
-  post<T = unknown>(path: string, data?: Partial<T>): Promise<T>;
-  patch<T = unknown>(path: string, data?: Partial<T>): Promise<T>;
-  delete<T = unknown>(path: string): Promise<T>;
-  with(opts?: ClientOpts): Client;
-}
-
-export declare function getClient(): Client;
-
 /* ----- api/v1/models ----- */
 
 /// <_include path="@root/types/models.d.ts#BaseNode" />
@@ -58,3 +39,59 @@ export declare function getClient(): Client;
 /// <_include path="@root/types/objects.d.ts#BaseConfig" />
 /// <_include path="@root/types/objects.d.ts#RicObject" />
 /// <_include path="@root/types/objects.d.ts#Object" />
+
+export interface ClientOpts {
+  url?: string;
+  token?: string;
+}
+
+type Split<S extends string, D extends string> = string extends S
+  ? string[]
+  : S extends ""
+  ? []
+  : S extends `${infer T}${D}${infer U}`
+  ? [T, ...Split<U, D>]
+  : [S];
+
+type TypeRegistryGet<TProp> = TProp extends keyof TypeRegistry
+  ? TypeRegistry[TProp]
+  : TypeRegistry["base"];
+
+interface TypeRegistry {
+  base: BaseItem;
+}
+
+/// <_include path="@root/types/_reg.d.ts#TypeRegistry" />
+
+export declare class Client {
+  constructor(opts?: ClientOpts);
+
+  get<P extends string = "base", T = TypeRegistryGet<Split<P, "/">[0]>>(
+    path: P
+  ): Promise<T[]>;
+
+  post<
+    P extends string = "base",
+    T = TypeRegistryGet<Split<P, "/">[0]>,
+    U = Partial<T>
+  >(path: P, data: U): Promise<T>;
+
+  patch<
+    P extends string = "base",
+    T = TypeRegistryGet<Split<P, "/">[0]>,
+    U = Partial<T>
+  >(path: P, data: U): Promise<T>;
+
+  delete<P extends string = "base", T = TypeRegistryGet<Split<P, "/">[0]>>(
+    path: P
+  ): Promise<T>;
+
+  get<T = unknown>(path: string): Promise<T[]>;
+  post<T = unknown>(path: string, data: Partial<T>): Promise<T>;
+  patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
+  delete<T = unknown>(path: string): Promise<T>;
+
+  with(opts?: ClientOpts): Client;
+}
+
+export declare function getClient(opts?: ClientOpts): Client;
