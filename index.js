@@ -1,6 +1,6 @@
 const { CODES, ApiError, NginxError, Client } = require("./dist/api");
 
-function resolveDefaultClient() {
+function getClient() {
   const baseUrl =
     process.env["RIC_BASE_URL"] ||
     process.env["RIC_URL"] ||
@@ -12,8 +12,8 @@ function resolveDefaultClient() {
   });
 }
 
-const defaultClient = resolveDefaultClient();
+const defaultClient = getClient();
 
-Object.assign(defaultClient, { CODES, ApiError, NginxError, Client });
+Object.assign(defaultClient, { getClient, CODES, ApiError, NginxError, Client });
 
 module.exports = defaultClient;

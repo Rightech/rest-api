@@ -51,6 +51,8 @@ export declare class Client {
   with(opts?: ClientOpts): Client;
 }
 
+export declare function getClient(): Client;
+
 /* ----- api/v1/models ----- */
 
 export interface BaseNode {

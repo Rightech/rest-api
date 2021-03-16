@@ -40,6 +40,8 @@ export declare class Client {
   with(opts?: ClientOpts): Client;
 }
 
+export declare function getClient(): Client;
+
 /* ----- api/v1/models ----- */
 
 /// <_include path="@root/types/models.d.ts#BaseNode" />
