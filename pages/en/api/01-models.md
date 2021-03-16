@@ -7,8 +7,8 @@ path: developers/http-api/models
 
 ## Type definitions { #types }
 
-[JSON Schema](https://github.com/Rightech/rest-api/blob/main/oas3/schemas/models.yaml)
-[Type Definitions](https://github.com/Rightech/rest-api/blob/main/types/models.d.ts)
+[JSON Schema](https://github.com/Rightech/rest-api/blob/master/oas3/schemas/models.yaml)
+[Type Definitions](https://github.com/Rightech/rest-api/blob/master/types/models.d.ts)
 
 ### Model nodes
 
@@ -54,7 +54,7 @@ POST /models HTTP/1.1
 
 {
     "base": "mqtt",
-    "name": "api-test-01",
+    "name": "test-model-01",
 }
 ```
 
@@ -64,7 +64,7 @@ POST /models HTTP/1.1
 PATCH /models/:id HTTP/1.1
 
 {
-    "name": "api-test-01.00",
+    "name": "test-model-01.00",
 }
 ```
 
