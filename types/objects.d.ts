@@ -6,7 +6,7 @@ export type BaseState = {
 
 export type BaseConfig = {
   [parentId: string]: {
-    [argumentId: string]: number | boolean | string | object;
+    [argumentId: string]: number | boolean | string;
   };
 };
 

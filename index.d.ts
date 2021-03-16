@@ -1,17 +1,6 @@
-// export type { ItemId, BaseItem } from "./types/base";
+/* ----- api/v1 ----- */
 
-// export type {
-//   BaseNode,
-//   SystemNode,
-//   EventNode,
-//   ActionNode,
-//   ArgumentNode,
-//   ModelNode,
-//   Model,
-// } from "./types/models";
-
-// export type { BaseConfig, BaseState, Object } from "./types/objects";
-
+/** test comment */
 export type ItemId = string;
 
 export interface BaseItem {
@@ -23,6 +12,7 @@ export interface BaseItem {
   owner: ItemId;
   group: ItemId;
 }
+
 
 export declare class ApiError extends Error {
   url: string;
@@ -60,3 +50,79 @@ export declare class Client {
   delete<T = unknown>(path: string): Promise<T>;
   with(opts?: ClientOpts): Client;
 }
+
+/* ----- api/v1/models ----- */
+
+export interface BaseNode {
+  type: string;
+  id: string;
+  name: string;
+  description?: string;
+  active: boolean;
+  children?: ModelNode[];
+}
+
+export interface SystemNode extends BaseNode {
+  type: 'subsystem';
+}
+
+export interface EventNode extends BaseNode {
+  type: 'event';
+}
+
+export interface ArgumentNode extends BaseNode {
+  type: 'argument';
+  dataType: 'number' | 'boolean' | 'string' | string;
+  unit?: string;
+}
+
+export interface ActionNode extends BaseNode {
+  type: 'action';
+  service?: string;
+
+  /** js-doc test 1 */
+  command?: string;
+  
+  /** js-doc test 2 */
+  params?: unknown;
+}
+
+export type ModelNode = BaseNode
+  | SystemNode
+  | EventNode
+  | ArgumentNode
+  | ActionNode;
+
+export interface Model extends BaseItem {
+  base: string;
+  data: ModelNode;
+
+  props?: {
+    bots?: boolean;
+    protocol?: string;
+    idPattern?: string;
+  };
+}
+
+
+/* ----- api/v1/objects ----- */
+
+export type BaseState = {
+  [argumentId: string]: number | boolean | string | object;
+};
+
+export type BaseConfig = {
+  [parentId: string]: {
+    [argumentId: string]: number | boolean | string;
+  };
+};
+
+export interface Object<TState = BaseState, TConfig = BaseConfig>
+  extends BaseItem {
+  id: string;
+  model: ItemId;
+
+  state?: TState;
+  config?: TConfig;
+}
+

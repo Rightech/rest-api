@@ -13,18 +13,20 @@ path: developers/http-api/models
 ### Model nodes
 
 ```ts
-/// <reference path="@root/types/models.d.ts#BaseNode" />
-/// <reference path="@root/types/models.d.ts#SystemNode" />
-/// <reference path="@root/types/models.d.ts#EventNode" />
-/// <reference path="@root/types/models.d.ts#ArgumentNode" />
-/// <reference path="@root/types/models.d.ts#ActionNode" />
-/// <reference path="@root/types/models.d.ts#ModelNode" />
+/// <_include path="@root/types/models.d.ts#BaseNode" />
+/// <_include path="@root/types/models.d.ts#SystemNode" />
+/// <_include path="@root/types/models.d.ts#EventNode" />
+/// <_include path="@root/types/models.d.ts#ArgumentNode" />
+/// <_include path="@root/types/models.d.ts#ActionNode" />
+/// <_include path="@root/types/models.d.ts#ModelNode" />
 ```
 
 ### Model item
 
 ```ts
-/// <reference path="@root/types/models.d.ts#Model" />
+import type { BaseItem } from "@rightech/api";
+
+/// <_include path="@root/types/models.d.ts#Model" />
 ```
 
 ## Models API
