@@ -223,14 +223,154 @@ export function nodeReq<Q = unknown, S = unknown>(
   });
 }
 
+function tryGetFetch() {
+  try {
+    return require("node-fetch");
+  } catch (_) {
+    return fetch;
+  }
+}
+
+class EventEmitter0 {
+  registry = {};
+
+  on<T>(event: string, handler: (data: T) => void) {
+    if (!this.registry[event]) {
+      this.registry[event] = [];
+    }
+    this.registry[event].push(handler);
+    return handler;
+  }
+  emit<T>(event: string, data?: T) {
+    if (!this.registry[event]) {
+      this.registry[event] = [];
+    }
+    this.registry[event].forEach((handler) => handler(data));
+  }
+}
+
+function read(response: ReadableStream<Uint8Array>) {
+  let cancellationToken: { cancel: () => void };
+  let cancellationRequest = false;
+
+  const events = new EventEmitter0();
+  const stream = new ReadableStream({
+    start(controller) {
+      const reader = response.getReader();
+      cancellationToken = reader;
+
+      const decoder = new TextDecoder();
+      let buf = "";
+      let totalBytes = 0;
+
+      reader
+        .read()
+        .then(function processResult(result) {
+          if (result.done) {
+            if (cancellationRequest) {
+              return;
+            }
+
+            buf = buf.trim();
+            if (buf.length !== 0) {
+              try {
+                controller.enqueue(JSON.parse(buf));
+              } catch (e) {
+                controller.error(e);
+                return;
+              }
+            }
+            controller.close();
+            return;
+          }
+
+          const data = decoder.decode(result.value, { stream: true });
+          buf += data;
+          totalBytes += buf.length;
+
+          const stats = { bytes: buf.length, totalBytes };
+          const lines = buf.split("\n");
+          let batch = [];
+
+          for (let i = 0; i < lines.length - 1; ++i) {
+            var l = lines[i].trim();
+            if (l === "[") {
+              events.emit("start");
+              continue;
+            }
+            if (l === ",") {
+              continue;
+            }
+
+            if (l.length > 0 && l !== "]") {
+              try {
+                const line = JSON.parse(l);
+                controller.enqueue(line);
+                batch.push(line);
+              } catch (e) {
+                controller.error(e);
+                cancellationRequest = true;
+                reader.cancel();
+                return;
+              }
+            }
+          }
+          buf = lines[lines.length - 1];
+          events.emit("batch", { batch, stats });
+
+          if (l === "]") {
+            events.emit("end");
+          }
+
+          return reader
+            .read()
+            .then(processResult)
+            .catch((err) => {
+              cancellationRequest = true;
+              events.emit("cancel");
+              return false;
+            });
+        })
+        .catch((err) => {
+          cancellationRequest = true;
+          cancellationToken.cancel();
+        });
+    },
+    cancel(reason) {
+      events.emit("cancel");
+      cancellationRequest = true;
+      cancellationToken.cancel();
+    },
+  });
+
+  async function readAll() {
+    const reader = stream.getReader();
+    const data = [];
+
+    let result: ReadableStreamDefaultReadResult<any>;
+
+    while (!result || !result.done) {
+      result = await reader.read();
+      if (result.value) {
+        data.push(result.value);
+      }
+    }
+    return data;
+  }
+
+  return { stream, events, readAll };
+}
+
 export async function req<Q = unknown, S = unknown>(
   opts: RequestOptions<Q>
 ): Promise<S> {
-  if (typeof fetch !== "function") {
+  const _fetch = tryGetFetch();
+
+  if (typeof _fetch !== "function") {
     return nodeReq(opts);
   }
 
-  const resp = await fetch(opts.url, {
+  const resp = await _fetch(opts.url, {
     headers: opts.headers,
     method: opts.method || "GET",
     body: <any>opts.body || null,
@@ -245,11 +385,38 @@ export async function req<Q = unknown, S = unknown>(
   return json;
 }
 
+export async function reqReader<Q = unknown, S = unknown>(
+  opts: RequestOptions<Q>
+): Promise<StreamReader<S>> {
+  const _fetch = tryGetFetch();
+
+  if (typeof _fetch !== "function") {
+    throw new Error("readable stream available for fetch api only");
+  }
+
+  const resp = await _fetch(opts.url, {
+    headers: opts.headers,
+    method: opts.method || "GET",
+    body: <any>opts.body || null,
+  });
+
+  if (resp.status >= 400) {
+    throw ApiError.fromJson(opts, await resp.json(), resp.status);
+  }
+
+  return read(resp.body);
+}
+
 export interface ClientOpts {
   url?: string;
   token?: string;
 }
 
+export interface StreamReader<T = unknown> {
+  events: EventEmitter0;
+  stream: ReadableStream<T>;
+  readAll: () => Promise<T[]>;
+}
 export class Client {
   _opts: ClientOpts;
   url: string;
@@ -274,7 +441,16 @@ export class Client {
     return defaults;
   }
 
-  get<T = unknown>(path: string, query = {}): Promise<T> {
+  read<T = unknown>(path: string): Promise<StreamReader<T>> {
+    const url = new URL(path, this.url);
+    url.searchParams.set("streamed", "true");
+    url.searchParams.set("nolimit", "true");
+
+    const headers = this.getDefaultHeaders();
+    return reqReader({ url: url.toString(), method: "GET", headers });
+  }
+
+  get<T = unknown>(path: string): Promise<T> {
     const url = new URL(path, this.url);
     const headers = this.getDefaultHeaders();
     return req({ url: url.toString(), method: "GET", headers });
