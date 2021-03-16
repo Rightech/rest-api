@@ -1,3 +1,5 @@
+// @ts-ignore
+
 export const CODES = {
   "100": "Continue",
   "101": "Switching Protocols",
@@ -385,6 +387,31 @@ export async function req<Q = unknown, S = unknown>(
   return json;
 }
 
+function nodeReadStream(stream) {
+  const JSONStream = require("JSONStream");
+  const events = new EventEmitter0();
+
+  const s0 = JSONStream.parse();
+  const s1 = stream.pipe(s0);
+
+  let totalBytes = 0;
+
+  stream.on("data", (data) => {
+    totalBytes += data.length;
+    const stats = { bytes: data.length, totalBytes };
+    events.emit("batch", { stats });
+  });
+
+  stream.on("end", () => {
+    events.emit("end");
+  });
+
+  return {
+    events,
+    stream: s1,
+  };
+}
+
 export async function reqReader<Q = unknown, S = unknown>(
   opts: RequestOptions<Q>
 ): Promise<StreamReader<S>> {
@@ -404,6 +431,10 @@ export async function reqReader<Q = unknown, S = unknown>(
     throw ApiError.fromJson(opts, await resp.json(), resp.status);
   }
 
+  if (typeof ReadableStream === "undefined") {
+    return nodeReadStream(resp.body);
+  }
+
   return read(resp.body);
 }
 
@@ -415,7 +446,7 @@ export interface ClientOpts {
 export interface StreamReader<T = unknown> {
   events: EventEmitter0;
   stream: ReadableStream<T>;
-  readAll: () => Promise<T[]>;
+  readAll?: () => Promise<T[]>;
 }
 export class Client {
   _opts: ClientOpts;
