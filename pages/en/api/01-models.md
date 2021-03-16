@@ -24,7 +24,7 @@ path: developers/http-api/models
 ### Model item
 
 ```ts
-import type { BaseItem } from "@rightech/api";
+import type { BaseItem, ModelNode } from "@rightech/api";
 
 /// <_include path="@root/types/models.d.ts#Model" />
 ```

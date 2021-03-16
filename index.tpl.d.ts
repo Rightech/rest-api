@@ -54,4 +54,5 @@ export declare class Client {
 
 /// <_include path="@root/types/objects.d.ts#BaseState" />
 /// <_include path="@root/types/objects.d.ts#BaseConfig" />
+/// <_include path="@root/types/objects.d.ts#RicObject" />
 /// <_include path="@root/types/objects.d.ts#Object" />
