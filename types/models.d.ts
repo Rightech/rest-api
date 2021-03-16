@@ -1,53 +1,57 @@
-import type { BaseItem } from './base';
+import type { BaseItem } from "./base";
 
-
-export interface BaseNode {
+export type BaseNode = {
   type: string;
   id: string;
   name: string;
   description?: string;
   active: boolean;
   children?: ModelNode[];
-}
+};
 
-export interface SystemNode extends BaseNode {
-  type: 'subsystem';
-}
+export type SystemNode = BaseNode & {
+  type: "subsystem";
+};
 
-export interface EventNode extends BaseNode {
-  type: 'event';
-}
+export type EventNode = BaseNode & {
+  type: "event";
+};
 
-export interface ArgumentNode extends BaseNode {
-  type: 'argument';
-  dataType: 'number' | 'boolean' | 'string' | string;
-  unit?: string;
-}
-
-export interface ActionNode extends BaseNode {
-  type: 'action';
-  service?: string;
-
-  /** js-doc test 1 */
+export type ActionNode = BaseNode & {
+  type: "action";
+  service: string;
   command?: string;
-  
-  /** js-doc test 2 */
-  params?: unknown;
-}
+  params?: Record<string, string>;
+};
 
-export type ModelNode = BaseNode
+export type ArgumentNode = BaseNode & {
+  type: "argument";
+  dataType: ArgumentDataType;
+  unit?: string;
+};
+
+export type ArgumentDataType =
+  | "number"
+  | "boolean"
+  | "string"
+  | "object"
+  | string;
+
+export type ModelNode =
+  | BaseNode
   | SystemNode
   | EventNode
   | ArgumentNode
   | ActionNode;
 
+export type ModelProps = {
+  bots?: boolean;
+  protocol?: string;
+  idPattern?: string;
+};
+
 export interface Model extends BaseItem {
   base: string;
   data: ModelNode;
-
-  props?: {
-    bots?: boolean;
-    protocol?: string;
-    idPattern?: string;
-  };
+  props?: ModelProps;
 }

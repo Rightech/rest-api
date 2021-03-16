@@ -16,8 +16,9 @@ path: developers/http-api/models
 /// <_include path="@root/types/models.d.ts#BaseNode" />
 /// <_include path="@root/types/models.d.ts#SystemNode" />
 /// <_include path="@root/types/models.d.ts#EventNode" />
-/// <_include path="@root/types/models.d.ts#ArgumentNode" />
 /// <_include path="@root/types/models.d.ts#ActionNode" />
+/// <_include path="@root/types/models.d.ts#ArgumentNode" />
+/// <_include path="@root/types/models.d.ts#ArgumentDataType" />
 /// <_include path="@root/types/models.d.ts#ModelNode" />
 ```
 
@@ -26,6 +27,7 @@ path: developers/http-api/models
 ```ts
 import type { BaseItem, ModelNode } from "@rightech/api";
 
+/// <_include path="@root/types/models.d.ts#ModelProps" />
 /// <_include path="@root/types/models.d.ts#Model" />
 ```
 
@@ -45,6 +47,14 @@ GET /models/base HTTP/1.1
 
 ```http
 GET /models HTTP/1.1
+```
+```typescript
+import { getClient } from "@rightech/api";
+
+const api = getClient();
+const models = await api.get('models');
+
+console.log(models);
 ```
 
 ### Create new model { id="POST /models" }
