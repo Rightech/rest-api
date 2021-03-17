@@ -121,30 +121,36 @@ export class ApiError extends Error {
 
   withTags(tags: string[] = []) {
     this.tags = unique([...this.tags, ...(tags || [])]);
+    this.message = `${this.message} with tags [${this.tags}]`;
     return this;
   }
 
   withHelper(helper: ApiErrorHelper) {
     this.helper = helper;
+    if (this.helper && this.helper.message) {
+      this.message = `${this.message}. ${this.helper.message}`;
+    }
     return this;
   }
 
   withCode(code: number) {
     this.code = +code;
+    this.message = `${this.code}: ${this.message}`;
     return this;
   }
 
   withUrl(url: string) {
     this.url = url;
+    this.message = `${this.message} on url [${this.url}]`;
     return this;
   }
 
   static fromJson(opts: RequestOptions, json: ApiError, statusCode = 500) {
     return new ApiError(json.message)
       .withCode(statusCode)
-      .withTags(json.tags)
       .withHelper(json.helper || {})
-      .withUrl(opts.url);
+      .withUrl(opts.url)
+      .withTags(json.tags);
   }
 }
 
@@ -153,6 +159,9 @@ export class NginxError extends ApiError {
 
   withTitle(title = "") {
     this.title = title;
+    if (this.title) {
+      this.message = `${this.message}. ${this.title}`;
+    }
     return this;
   }
 
