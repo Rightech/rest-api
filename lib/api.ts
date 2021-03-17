@@ -121,7 +121,9 @@ export class ApiError extends Error {
 
   withTags(tags: string[] = []) {
     this.tags = unique([...this.tags, ...(tags || [])]);
-    this.message = `${this.message} with tags [${this.tags}]`;
+    if (this.tags.length) {
+      this.message = `${this.message} with tags [${this.tags}]`;
+    }
     return this;
   }
 
@@ -387,12 +389,21 @@ export async function req<Q = unknown, S = unknown>(
     body: <any>opts.body || null,
   });
 
-  const json = await resp.json();
+  const text = await resp.text();
 
+  if (text.startsWith("<html>") && text.includes("nginx")) {
+    throw NginxError.fromHtml(opts, text, resp.status);
+  }
+
+  let json: any;
+  try {
+    json = JSON.parse(text);
+  } catch (err) {
+    throw ApiError.fromJson(opts, err as ApiError, resp.status);
+  }
   if (resp.status >= 400) {
     throw ApiError.fromJson(opts, json, resp.status);
   }
-
   return json;
 }
 
