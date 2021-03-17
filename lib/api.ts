@@ -143,7 +143,7 @@ export class ApiError extends Error {
 
   withUrl(url: string) {
     this.url = url;
-    this.message = `${this.message} on url [${this.url}]`;
+    this.message = `${this.message} for url ${this.url}`;
     return this;
   }
 
@@ -503,6 +503,8 @@ export class Client {
 
   get<T = unknown>(path: string): Promise<T> {
     const url = new URL(path, this.url);
+    url.searchParams.set("streamed", "true");
+
     const headers = this.getDefaultHeaders();
     return req({ url: url.toString(), method: "GET", headers });
   }
