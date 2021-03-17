@@ -1,6 +1,10 @@
 // @ts-ignore
+// deno-lint-ignore-file
 
-export const CODES = {
+// ignore TS2580
+declare var require: any;
+
+export const CODES: Record<string, string> = {
   "100": "Continue",
   "101": "Switching Protocols",
   "102": "Processing",
@@ -75,12 +79,10 @@ export type ApiErrorHelper = {
   links?: string[];
 };
 
-export type KVM = { [k: string]: string };
-
 export type RequestOptions<T = unknown> = {
   url: string;
   method?: "GET" | "POST" | "PATCH" | "DELETE";
-  headers?: KVM;
+  headers?: Record<string, string>;
   body?: T;
 };
 
@@ -199,31 +201,34 @@ export function nodeReq<Q = unknown, S = unknown>(
   }
 
   return new Promise((resolve, reject) => {
-    const req = proto.request(options, (res) => {
-      let resp = "";
-      res.on("data", (chunk) => (resp += chunk.toString()));
-      res.on("end", () => {
-        try {
-          /*
-           * most nginx upstream errors should be handled by ingress default-backend
-           * but who knows ...
-           */
-          if (resp.startsWith("<html>") && resp.includes("nginx")) {
-            return reject(NginxError.fromHtml(opts, resp, res.statusCode));
+    const req = proto.request(
+      options,
+      (res: EventEmitter0 & { statusCode: number }) => {
+        let resp = "";
+        res.on("data", (chunk: string) => (resp += chunk.toString()));
+        res.on("end", () => {
+          try {
+            /*
+             * most nginx upstream errors should be handled by ingress default-backend
+             * but who knows ...
+             */
+            if (resp.startsWith("<html>") && resp.includes("nginx")) {
+              return reject(NginxError.fromHtml(opts, resp, res.statusCode));
+            }
+            const json = JSON.parse(resp);
+            if (res.statusCode >= 400) {
+              return reject(ApiError.fromJson(opts, json, res.statusCode));
+            }
+            resolve(json);
+          } catch (err) {
+            console.log(resp);
+            reject(err);
           }
-          const json = JSON.parse(resp);
-          if (res.statusCode >= 400) {
-            return reject(ApiError.fromJson(opts, json, res.statusCode));
-          }
-          resolve(json);
-        } catch (err) {
-          console.log(resp);
-          reject(err);
-        }
-      });
-    });
+        });
+      }
+    );
 
-    req.on("error", (err) => reject(err));
+    req.on("error", (err: unknown) => reject(err));
 
     if (opts.body) {
       let send = opts.body as any;
@@ -245,7 +250,7 @@ function tryGetFetch() {
 }
 
 class EventEmitter0 {
-  registry = {};
+  registry: Record<string, Function[]> = {};
 
   on<T>(event: string, handler: (data: T) => void) {
     if (!this.registry[event]) {
@@ -278,7 +283,7 @@ function read(response: ReadableStream<Uint8Array>) {
 
       reader
         .read()
-        .then(function processResult(result) {
+        .then(function processResult(result): any {
           if (result.done) {
             if (cancellationRequest) {
               return;
@@ -297,16 +302,17 @@ function read(response: ReadableStream<Uint8Array>) {
             return;
           }
 
-          const data = decoder.decode(result.value, { stream: true });
+          const data = decoder.decode(result.value, { stream: true } as any);
           buf += data;
           totalBytes += buf.length;
 
           const stats = { bytes: buf.length, totalBytes };
           const lines = buf.split("\n");
           let batch = [];
+          let l = "";
 
           for (let i = 0; i < lines.length - 1; ++i) {
-            var l = lines[i].trim();
+            l = lines[i].trim();
             if (l === "[") {
               events.emit("start");
               continue;
@@ -360,7 +366,7 @@ function read(response: ReadableStream<Uint8Array>) {
     const reader = stream.getReader();
     const data = [];
 
-    let result: ReadableStreamDefaultReadResult<any>;
+    let result: any;
 
     while (!result || !result.done) {
       result = await reader.read();
@@ -407,7 +413,7 @@ export async function req<Q = unknown, S = unknown>(
   return json;
 }
 
-function nodeReadStream(stream) {
+function nodeReadStream(stream: any) {
   const JSONStream = require("JSONStream");
   const events = new EventEmitter0();
 
@@ -416,7 +422,7 @@ function nodeReadStream(stream) {
 
   let totalBytes = 0;
 
-  stream.on("data", (data) => {
+  stream.on("data", (data: string) => {
     totalBytes += data.length;
     const stats = { bytes: data.length, totalBytes };
     events.emit("batch", { stats });
@@ -481,7 +487,7 @@ export class Client {
   }
 
   getDefaultHeaders() {
-    const defaults: KVM = {
+    const defaults: Record<string, string> = {
       accept: "application/json",
       "content-type": "application/json",
       "user-agent": `rightech/rest-api client 1.1`,
