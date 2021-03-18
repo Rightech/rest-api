@@ -97,6 +97,7 @@ function unique<T = unknown>(array: T[] = []) {
 export class ApiError extends Error {
   jti: string = "";
   url: string = "";
+  verb: string = "GET";
   tags: string[] = [];
   code = 500;
   helper = {} as ApiErrorHelper;
@@ -139,6 +140,11 @@ export class ApiError extends Error {
     return this;
   }
 
+  withVerb(verb = "GET") {
+    this.verb = verb;
+    return this;
+  }
+
   withCode(code: number) {
     this.code = +code;
     this.message = `${this.code}: ${this.message}`;
@@ -147,7 +153,7 @@ export class ApiError extends Error {
 
   withUrl(url: string) {
     this.url = url;
-    this.message = `${this.message} for url ${this.url}`;
+    this.message = `${this.message} for ${this.verb.toUpperCase()} ${this.url}`;
     return this;
   }
 
@@ -155,6 +161,7 @@ export class ApiError extends Error {
     return new ApiError(json.message)
       .withCode(statusCode)
       .withHelper(json.helper || {})
+      .withVerb(opts.method)
       .withUrl(opts.url)
       .withTags(json.tags);
   }
@@ -179,6 +186,7 @@ export class NginxError extends ApiError {
     return new NginxError(CODES[statusCode])
       .withCode(statusCode)
       .withTitle(title)
+      .withVerb(opts.method)
       .withUrl(opts.url);
   }
 }
