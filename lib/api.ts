@@ -4,6 +4,8 @@
 // ignore TS2580
 declare var require: any;
 
+export const VERSION = "v1";
+
 export const CODES: Record<string, string> = {
   "100": "Continue",
   "101": "Switching Protocols",
@@ -389,12 +391,20 @@ export async function req<Q = unknown, S = unknown>(
     return nodeReq(opts);
   }
 
-  const resp = await _fetch(opts.url, {
+  const fetchOpts = {
     headers: opts.headers,
     method: opts.method || "GET",
-    body: <any>opts.body || null,
-  });
+    body: <any>null,
+  };
 
+  if (opts.body) {
+    fetchOpts.body = opts.body;
+    if (typeof fetchOpts.body === "object") {
+      fetchOpts.body = JSON.stringify(fetchOpts.body);
+    }
+  }
+
+  const resp = await _fetch(opts.url, fetchOpts);
   const text = await resp.text();
 
   if (text.startsWith("<html>") && text.includes("nginx")) {
@@ -486,7 +496,7 @@ export class Client {
     this.token = this._opts.token!;
   }
 
-  getDefaultHeaders() {
+  getHeaders() {
     const defaults: Record<string, string> = {
       accept: "application/json",
       "content-type": "application/json",
@@ -498,42 +508,67 @@ export class Client {
     return defaults;
   }
 
-  read<T = unknown>(path: string): Promise<StreamReader<T>> {
+  resolveUrl(path: string) {
+    if (path.startsWith("/")) {
+      path = path.replace("/", "");
+    }
+    if (!path.startsWith(`api/${VERSION}`)) {
+      path = `api/${VERSION}/${path}`;
+    }
     const url = new URL(path, this.url);
-    url.searchParams.set("streamed", "true");
-    url.searchParams.set("nolimit", "true");
-
-    const headers = this.getDefaultHeaders();
-    return reqReader({ url: url.toString(), method: "GET", headers });
+    return url;
   }
 
   get<T = unknown>(path: string): Promise<T> {
-    const url = new URL(path, this.url);
-    url.searchParams.set("streamed", "true");
-
-    const headers = this.getDefaultHeaders();
-    return req({ url: url.toString(), method: "GET", headers });
+    const url = this.resolveUrl(path);
+    if (!url.searchParams.has("streamed")) {
+      url.searchParams.set("streamed", "true");
+    }
+    return req({
+      method: "GET",
+      url: url.toString(),
+      headers: this.getHeaders(),
+    });
   }
 
   post<T = unknown>(path: string, data: Partial<T> = {}): Promise<T> {
-    const url = new URL(path, this.url);
-    const headers = this.getDefaultHeaders();
-    return req({ url: url.toString(), method: "POST", headers, body: data });
+    return req({
+      method: "POST",
+      url: this.resolveUrl(path).toString(),
+      headers: this.getHeaders(),
+      body: data,
+    });
   }
 
   patch<T = unknown>(path: string, data: Partial<T> = {}): Promise<T> {
-    const url = new URL(path, this.url);
-    const headers = this.getDefaultHeaders();
-    return req({ url: url.toString(), method: "PATCH", headers, body: data });
+    return req({
+      method: "PATCH",
+      url: this.resolveUrl(path).toString(),
+      headers: this.getHeaders(),
+      body: data,
+    });
   }
 
   delete<T = unknown>(path: string): Promise<T> {
-    const url = new URL(path, this.url);
-    const headers = this.getDefaultHeaders();
-    return req({ url: url.toString(), method: "DELETE", headers });
+    return req({
+      method: "DELETE",
+      url: this.resolveUrl(path).toString(),
+      headers: this.getHeaders(),
+    });
   }
 
   with(opts: ClientOpts = {}) {
     return new Client({ ...(this._opts || {}), ...opts });
+  }
+
+  /* ↓ not part of api right now */
+
+  read<T = unknown>(path: string): Promise<StreamReader<T>> {
+    const url = this.resolveUrl(path);
+    url.searchParams.set("streamed", "true");
+    url.searchParams.set("nolimit", "true");
+
+    const headers = this.getHeaders();
+    return reqReader({ url: url.toString(), method: "GET", headers });
   }
 }
