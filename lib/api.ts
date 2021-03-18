@@ -29,7 +29,6 @@ function unique<T = unknown>(array: T[] = []) {
 }
 
 export class ApiError extends Error {
-  jti: string = "";
   url: string = "";
   verb: string = "GET";
   tags: string[] = [];
@@ -44,18 +43,6 @@ export class ApiError extends Error {
     } else {
       this.stack = new Error(message).stack;
     }
-    //this.trySetTokenId();
-  }
-
-  trySetTokenId() {
-    // const [, b64] = (getToken() || '').split('.');
-    // if (b64) {
-    //   try {
-    //     // TODO: move to ./base64.ts decode
-    //     const payload = Buffer.from(b64, 'base64').toString();
-    //     this.jti = JSON.parse(payload).jti || '';
-    //   } catch (err) {}
-    // }
   }
 
   withTags(tags: string[] = []) {
