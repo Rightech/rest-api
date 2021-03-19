@@ -179,4 +179,6 @@ export declare class Client {
   with(opts?: ClientOpts): Client;
 }
 
-export declare function getClient(opts?: ClientOpts): Client;
+export declare function getDefaultClient(opts?: ClientOpts): Client;
+declare const _default: Client;
+export default _default;
