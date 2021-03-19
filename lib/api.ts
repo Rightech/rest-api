@@ -5,7 +5,7 @@
 declare var require: any;
 
 export const VERSION = "v1";
-export const DEFAULT_BASE_URL = 'https://dev.rightech.io/';
+export const DEFAULT_BASE_URL = "https://dev.rightech.io/";
 
 export interface ApiResponse {
   success: boolean;
@@ -493,28 +493,28 @@ export class Client {
 }
 
 export function getDefaultClient(opts?: ClientOpts) {
-  const maybeNode = (globalThis as any)['process'] as any;
+  const maybeNode = (globalThis as any)["process"] as any;
   if (maybeNode && maybeNode.env) {
     return new Client({
       url: opts?.url ?? maybeNode.env["RIC_URL"] ?? DEFAULT_BASE_URL,
-      token: opts?.token ?? maybeNode.env["RIC_TOKEN"]
+      token: opts?.token ?? maybeNode.env["RIC_TOKEN"],
     });
   }
-  const maybeDeno = (globalThis as any)['Deno'] as any;
+  const maybeDeno = (globalThis as any)["Deno"] as any;
   if (maybeDeno && maybeDeno.env) {
     return new Client({
       url: opts?.url ?? maybeDeno.env.get("RIC_URL") ?? DEFAULT_BASE_URL,
-      token: opts?.token ?? maybeDeno.env.get("RIC_TOKEN")
+      token: opts?.token ?? maybeDeno.env.get("RIC_TOKEN"),
     });
   }
-  const maybeLocation = (globalThis as any)['location'] as any;
+  const maybeLocation = (globalThis as any)["location"] as any;
   if (maybeLocation && maybeLocation.origin) {
     return new Client({
       url: opts?.url ?? maybeLocation.origin,
     });
   }
 
-  return new Client({ url: DEFAULT_BASE_URL});
+  return new Client({ url: DEFAULT_BASE_URL });
 }
 
 export default getDefaultClient();
