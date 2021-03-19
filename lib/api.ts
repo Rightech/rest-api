@@ -393,7 +393,7 @@ export async function reqReader<Q = unknown, S = unknown>(
     return nodeReadStream(resp.body);
   }
 
-  return read(resp.body);
+  return read(resp.body!);
 }
 
 export interface ClientOpts {
