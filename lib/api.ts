@@ -162,11 +162,14 @@ export function nodeReq<Q = unknown, S = unknown>(
   });
 }
 
-function tryGetFetch() {
+function tryGetFetch(): (
+  input: RequestInfo,
+  init?: RequestInit
+) => Promise<Response> {
   try {
     return require("node-fetch");
   } catch (_) {
-    return fetch;
+    return (globalThis as any)["fetch"] as any;
   }
 }
 
