@@ -136,7 +136,7 @@ type TypeRegistryGet<TProp> = TProp extends keyof TypeRegistry
   ? TypeRegistry[TProp]
   : TypeRegistry["base"];
 
-interface TypeRegistry {
+export interface TypeRegistry {
   base: BaseItem;
 }
 
