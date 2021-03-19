@@ -36,55 +36,61 @@ export interface ApiResponse {
 
 /* ----- api/v1/models ----- */
 
-export interface BaseNode {
+export type BaseNode = {
   type: string;
   id: string;
   name: string;
   description?: string;
   active: boolean;
   children?: ModelNode[];
-}
+};
 
-export interface SystemNode extends BaseNode {
-  type: 'subsystem';
-}
+export type SystemNode = BaseNode & {
+  type: "subsystem";
+};
 
-export interface EventNode extends BaseNode {
-  type: 'event';
-}
+export type EventNode = BaseNode & {
+  type: "event";
+};
 
-export interface ArgumentNode extends BaseNode {
-  type: 'argument';
-  dataType: 'number' | 'boolean' | 'string' | string;
-  unit?: string;
-}
-
-export interface ActionNode extends BaseNode {
-  type: 'action';
-  service?: string;
-
-  /** js-doc test 1 */
+export type ActionNode = BaseNode & {
+  type: "action";
+  service: string;
   command?: string;
-  
-  /** js-doc test 2 */
-  params?: unknown;
-}
+  params?: Record<string, string>;
+};
 
-export type ModelNode = BaseNode
+export type ArgumentNode = BaseNode & {
+  type: "argument";
+  dataType: ArgumentDataType;
+  unit?: string;
+};
+
+export type ArgumentDataType =
+  | "number"
+  | "boolean"
+  | "string"
+  | "object"
+  | string;
+
+export type ModelNode =
+  | BaseNode
   | SystemNode
   | EventNode
   | ArgumentNode
   | ActionNode;
 
+
+export type ModelProps = {
+  bots?: boolean;
+  protocol?: string;
+  idPattern?: string;
+};
+
 export interface Model extends BaseItem {
   base: string;
   data: ModelNode;
-
-  props?: {
-    bots?: boolean;
-    protocol?: string;
-    idPattern?: string;
-  };
+  props?: ModelProps;
 }
 
 
@@ -119,6 +125,20 @@ export type Object<TState = BaseState, TConfig = BaseConfig> = RicObject<
 >;
 
 
+
+/* ----- api/v1/events ----- */
+export interface Event<T = unknown> {
+  _msgid: string;
+  _oid?: ItemId;
+  _gid?: ItemId;
+
+  service?: string;
+  event: string;
+  time: number;
+  data: T;
+}
+
+
 export interface ClientOpts {
   url?: string;
   token?: string;
@@ -145,6 +165,8 @@ export interface TypeRegistry {
 
   models: Model;
   objects: RicObject;
+
+  events: Event;
 }
 
 

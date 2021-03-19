@@ -14,10 +14,6 @@ type AccessCtx = {
 };
 
 export interface Event<T = unknown> {
-  _v2: 1;
-  _ctx?: ShortCtx;
-  _acx?: AccessCtx;
-
   _msgid: string;
   _oid?: ItemId;
   _gid?: ItemId;
@@ -27,3 +23,9 @@ export interface Event<T = unknown> {
   time: number;
   data: T;
 }
+
+export type EventMessage<T> = Event<T> & {
+  _v2: 1;
+  _ctx?: ShortCtx;
+  _acx?: AccessCtx;
+};
