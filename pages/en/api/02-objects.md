@@ -13,6 +13,7 @@ path: developers/http-api/objects
 ```ts
 import type { ItemId, BaseItem } from "@rightech/api";
 
+/// <_include path="@root/types/objects.d.ts#ServiceState" />
 /// <_include path="@root/types/objects.d.ts#BaseState" />
 /// <_include path="@root/types/objects.d.ts#BaseConfig" />
 /// <_include path="@root/types/objects.d.ts#RicObject" />

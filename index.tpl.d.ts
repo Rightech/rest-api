@@ -37,7 +37,7 @@ export interface ApiResponse {
 /// <_include path="@root/types/models.d.ts#Model" />
 
 /* ----- api/v1/objects ----- */
-
+/// <_include path="@root/types/objects.d.ts#ServiceState" />
 /// <_include path="@root/types/objects.d.ts#BaseState" />
 /// <_include path="@root/types/objects.d.ts#BaseConfig" />
 /// <_include path="@root/types/objects.d.ts#RicObject" />

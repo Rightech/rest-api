@@ -1,6 +1,14 @@
 import type { BaseItem, ItemId } from "./base";
 
-export type BaseState = {
+export type ServiceState = {
+  _ts: number;
+  _oid: ItemId;
+  _gid: ItemId;
+  time: number;
+  online: boolean;
+}
+
+export type BaseState = ServiceState & {
   [argumentId: string]: number | boolean | string | BaseState;
 };
 
