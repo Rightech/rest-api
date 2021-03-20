@@ -406,6 +406,52 @@ export interface StreamReader<T = unknown> {
   stream: ReadableStream<T>;
   readAll?: () => Promise<T[]>;
 }
+
+type Split<S extends string, D extends string> = string extends S
+  ? string[]
+  : S extends ""
+  ? []
+  : S extends `${infer T}${D}${infer U}`
+  ? [T, ...Split<U, D>]
+  : [S];
+
+type TypeRegistryGet<TProp> = TProp extends keyof TypeRegistry
+  ? TypeRegistry[TProp]
+  : TypeRegistry["/"];
+
+export interface TypeRegistry {
+  ["/"]: any;
+  [""]: any;
+}
+
+export interface MoreTypedClient {
+  get<P extends string = "/", T = TypeRegistryGet<Split<P, "/">[0]>>(
+    path: P
+  ): Promise<T[]>;
+
+  post<
+    P extends string = "/",
+    T = TypeRegistryGet<Split<P, "/">[0]>,
+    U = Partial<T>
+  >(
+    path: P,
+    data: U
+  ): Promise<T>;
+
+  patch<
+    P extends string = "/",
+    T = TypeRegistryGet<Split<P, "/">[0]>,
+    U = Partial<T>
+  >(
+    path: P,
+    data: U
+  ): Promise<T>;
+
+  delete<P extends string = "/", T = TypeRegistryGet<Split<P, "/">[0]>>(
+    path: P
+  ): Promise<T>;
+}
+
 export class Client {
   _opts: ClientOpts;
   url: string;
@@ -445,8 +491,8 @@ export class Client {
     const url = this.resolveUrl(path);
     const headers = this.getHeaders();
 
-    if (!('ric-stream-hint' in headers)) {
-      headers['ric-stream-hint'] = 'yes';
+    if (!("ric-stream-hint" in headers)) {
+      headers["ric-stream-hint"] = "yes";
     }
 
     return req({
@@ -498,7 +544,7 @@ export class Client {
   }
 }
 
-export function getDefaultClient(opts?: ClientOpts) {
+export function getDefaultClient(opts?: ClientOpts) : MoreTypedClient & Client {
   const maybeNode = (globalThis as any)["process"] as any;
   if (maybeNode && maybeNode.env) {
     return new Client({
