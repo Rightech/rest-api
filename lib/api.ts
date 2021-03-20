@@ -443,13 +443,16 @@ export class Client {
 
   get<T = unknown>(path: string): Promise<T> {
     const url = this.resolveUrl(path);
-    if (!url.searchParams.has("streamed")) {
-      url.searchParams.set("streamed", "true");
+    const headers = this.getHeaders();
+
+    if (!('ric-stream-hint' in headers)) {
+      headers['ric-stream-hint'] = 'yes';
     }
+
     return req({
       method: "GET",
       url: url.toString(),
-      headers: this.getHeaders(),
+      headers,
     });
   }
 
