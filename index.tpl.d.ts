@@ -46,7 +46,7 @@ export declare class ApiError extends Error {
 /// <_include path="@root/lib/api.ts#Split" />
 /// <_include path="@root/lib/api.ts#WellKnownGet" />
 /// <_include path="@root/lib/api.ts#WellKnown" />
-/// <_include path="@root/types/index.d.ts#WellKnown" />
+/// <_include path="@root/types/_registry.d.ts#WellKnown" />
 /// <_include path="@root/lib/api.ts#MoreTypedClient" />
 
 export declare class Client {
