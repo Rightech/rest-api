@@ -1,6 +1,6 @@
 /* ----- api/v1 ----- */
 
-interface BaseItem {}
+export interface BaseItem {}
 
 /** test comment */
 export type ItemId = string;
