@@ -1,7 +1,5 @@
 /* ----- api/v1 ----- */
 
-export interface BaseItem {}
-
 /** test comment */
 export type ItemId = string;
 
@@ -114,7 +112,6 @@ export type Object<TState = BaseState, TConfig = BaseConfig> = RicObject<
 >;
 
 
-
 /* ----- api/v1/events ----- */
 export interface Event<T = unknown> {
   _msgid: string;
@@ -128,8 +125,20 @@ export interface Event<T = unknown> {
 }
 
 
-/* ----- client lib ----- */
+/* ----- api/v1/index ----- */
+export interface WellKnown {
+  base: BaseItem;
 
+  models: Model;
+  objects: RicObject;
+
+  events: Event;
+}
+
+
+
+
+/* ----- client lib ----- */
 export declare class ApiError extends Error {
   url: string;
   code: number;
@@ -165,15 +174,6 @@ type WellKnownGet<TProp> = TProp extends keyof WellKnown
 export interface WellKnown {
   ["/"]: any;
   [""]: any;
-}
-
-export interface WellKnown {
-  base: BaseItem;
-
-  models: Model;
-  objects: RicObject;
-
-  events: Event;
 }
 
 export interface MoreTypedClient {
@@ -219,3 +219,5 @@ export declare class Client {
 export declare function getDefaultClient(opts?: ClientOpts): Client & MoreTypedClient;
 declare const _default: Client & MoreTypedClient;
 export default _default;
+
+
