@@ -139,24 +139,40 @@ export interface WellKnown {
 
 
 /* ----- client lib ----- */
-export declare class ApiError extends Error {
+
+export type ApiErrorHelper = {
+  message: string;
+  links?: string[];
+};
+
+export interface ApiError extends Error {
   url: string;
   code: number;
   tags: string[];
-  helper: {
-    message?: string;
-    links?: string[];
-  };
+  helper: ApiErrorHelper;
 }
 
-export type DeprecatedResponseFields = {
+export type DeprecatedResponseV1 = {
   codes: string[];
   success: boolean;
-}
+};
+
+export type DeprecatedResponseV2 = {};
+
+export type DeprecatedResponse = DeprecatedResponseV1 & DeprecatedResponseV2;
 
 export interface ClientOpts {
   url?: string;
   token?: string;
+}
+
+export interface Client {
+  new (opts?: ClientOpts): Client;
+
+  get<T = unknown>(path: string): Promise<T[]>;
+  post<T = unknown>(path: string, data: Partial<T>): Promise<T>;
+  patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
+  delete<T = unknown>(path: string): Promise<T>;
 }
 
 type Split<S extends string, D extends string> = string extends S
@@ -205,19 +221,8 @@ export interface MoreTypedClient {
 }
 
 
-export declare class Client {
-  constructor(opts?: ClientOpts);
-
-  get<T = unknown>(path: string): Promise<T[]>;
-  post<T = unknown>(path: string, data: Partial<T>): Promise<T>;
-  patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
-  delete<T = unknown>(path: string): Promise<T>;
-
-  //with(opts?: ClientOpts): Client;
-}
+/* ----- client lib exports ----- */
 
 export declare function getDefaultClient(opts?: ClientOpts): Client & MoreTypedClient;
 declare const _default: Client & MoreTypedClient;
 export default _default;
-
-

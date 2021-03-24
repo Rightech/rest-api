@@ -7,13 +7,16 @@ declare var require: any;
 export const VERSION = "v1";
 export const DEFAULT_BASE_URL = "https://dev.rightech.io/";
 
-export type DeprecatedResponseFields = {
+export type DeprecatedResponseV1 = {
   codes: string[];
   success: boolean;
-}
+};
+
+export type DeprecatedResponseV2 = {};
+export type DeprecatedResponse = DeprecatedResponseV1 & DeprecatedResponseV2;
 
 export type ApiErrorHelper = {
-  message?: string;
+  message: string;
   links?: string[];
 };
 
@@ -30,7 +33,14 @@ function unique<T = unknown>(array: T[] = []) {
   });
 }
 
-export class ApiError extends Error {
+export interface ApiError extends Error {
+  url: string;
+  code: number;
+  tags: string[];
+  helper: ApiErrorHelper;
+}
+
+export class ApiError extends Error implements ApiError {
   url: string = "";
   verb: string = "GET";
   tags: string[] = [];
@@ -453,7 +463,16 @@ export interface MoreTypedClient {
   ): Promise<T>;
 }
 
-export class Client {
+export interface Client {
+  new (opts?: ClientOpts): Client;
+
+  get<T = unknown>(path: string): Promise<T[]>;
+  post<T = unknown>(path: string, data: Partial<T>): Promise<T>;
+  patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
+  delete<T = unknown>(path: string): Promise<T>;
+}
+
+export class Client implements Client {
   _opts: ClientOpts;
   url: string;
   token: string;
@@ -545,7 +564,7 @@ export class Client {
   }
 }
 
-export function getDefaultClient(opts?: ClientOpts) : MoreTypedClient & Client {
+export function getDefaultClient(opts?: ClientOpts): MoreTypedClient & Client {
   const maybeNode = (globalThis as any)["process"] as any;
   if (maybeNode && maybeNode.env) {
     return new Client({
