@@ -16,24 +16,6 @@ export interface BaseItem {
 }
 
 
-export declare class ApiError extends Error {
-  url: string;
-  code: number;
-  tags: string[];
-  helper: {
-    message?: string;
-    links?: string[];
-  };
-}
-
-export declare class NginxError extends ApiError {
-  title: string;
-}
-
-export interface ApiResponse {
-  success: boolean;
-}
-
 /* ----- api/v1/models ----- */
 
 export type BaseNode = {
@@ -95,8 +77,15 @@ export interface Model extends BaseItem {
 
 
 /* ----- api/v1/objects ----- */
+export type ServiceState = {
+  _ts: number;
+  _oid: ItemId;
+  _gid: ItemId;
+  time: number;
+  online: boolean;
+}
 
-export type BaseState = {
+export type BaseState = ServiceState & {
   [argumentId: string]: number | boolean | string | BaseState;
 };
 
@@ -139,6 +128,23 @@ export interface Event<T = unknown> {
 }
 
 
+/* ----- client lib ----- */
+
+export declare class ApiError extends Error {
+  url: string;
+  code: number;
+  tags: string[];
+  helper: {
+    message?: string;
+    links?: string[];
+  };
+}
+
+export type DeprecatedResponseFields = {
+  codes: string[];
+  success: boolean;
+}
+
 export interface ClientOpts {
   url?: string;
   token?: string;
@@ -152,15 +158,17 @@ type Split<S extends string, D extends string> = string extends S
   ? [T, ...Split<U, D>]
   : [S];
 
-type TypeRegistryGet<TProp> = TProp extends keyof TypeRegistry
-  ? TypeRegistry[TProp]
-  : TypeRegistry["base"];
+type WellKnownGet<TProp> = TProp extends keyof WellKnown
+  ? WellKnown[TProp]
+  : WellKnown["/"];
 
-export interface TypeRegistry {
-  base: BaseItem;
+export interface WellKnown {
+  ["/"]: any;
+  [""]: any;
 }
 
-export interface TypeRegistry {
+
+export interface WellKnown {
   base: BaseItem;
 
   models: Model;
@@ -169,38 +177,46 @@ export interface TypeRegistry {
   events: Event;
 }
 
-
-export declare class Client {
-  constructor(opts?: ClientOpts);
-
-  get<P extends string = "base", T = TypeRegistryGet<Split<P, "/">[0]>>(
+export interface MoreTypedClient {
+  get<P extends string = "/", T = WellKnownGet<Split<P, "/">[0]>>(
     path: P
   ): Promise<T[]>;
 
   post<
-    P extends string = "base",
-    T = TypeRegistryGet<Split<P, "/">[0]>,
+    P extends string = "/",
+    T = WellKnownGet<Split<P, "/">[0]>,
     U = Partial<T>
-  >(path: P, data: U): Promise<T>;
+  >(
+    path: P,
+    data: U
+  ): Promise<T>;
 
   patch<
-    P extends string = "base",
-    T = TypeRegistryGet<Split<P, "/">[0]>,
+    P extends string = "/",
+    T = WellKnownGet<Split<P, "/">[0]>,
     U = Partial<T>
-  >(path: P, data: U): Promise<T>;
+  >(
+    path: P,
+    data: U
+  ): Promise<T>;
 
-  delete<P extends string = "base", T = TypeRegistryGet<Split<P, "/">[0]>>(
+  delete<P extends string = "/", T = WellKnownGet<Split<P, "/">[0]>>(
     path: P
   ): Promise<T>;
+}
+
+
+export declare class Client {
+  constructor(opts?: ClientOpts);
 
   get<T = unknown>(path: string): Promise<T[]>;
   post<T = unknown>(path: string, data: Partial<T>): Promise<T>;
   patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
   delete<T = unknown>(path: string): Promise<T>;
 
-  with(opts?: ClientOpts): Client;
+  //with(opts?: ClientOpts): Client;
 }
 
-export declare function getDefaultClient(opts?: ClientOpts): Client;
-declare const _default: Client;
+export declare function getDefaultClient(opts?: ClientOpts): Client & MoreTypedClient;
+declare const _default: Client & MoreTypedClient;
 export default _default;

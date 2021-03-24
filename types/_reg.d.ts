@@ -5,7 +5,7 @@ import { RicObject } from "./objects";
 import { Event } from "./events";
 
 
-export interface TypeRegistry {
+export interface WellKnown {
   base: BaseItem;
 
   models: Model;

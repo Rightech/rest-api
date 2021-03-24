@@ -7,7 +7,8 @@ declare var require: any;
 export const VERSION = "v1";
 export const DEFAULT_BASE_URL = "https://dev.rightech.io/";
 
-export interface ApiResponse {
+export type DeprecatedResponseFields = {
+  codes: string[];
   success: boolean;
 }
 
@@ -415,23 +416,23 @@ type Split<S extends string, D extends string> = string extends S
   ? [T, ...Split<U, D>]
   : [S];
 
-type TypeRegistryGet<TProp> = TProp extends keyof TypeRegistry
-  ? TypeRegistry[TProp]
-  : TypeRegistry["/"];
+type WellKnownGet<TProp> = TProp extends keyof WellKnown
+  ? WellKnown[TProp]
+  : WellKnown["/"];
 
-export interface TypeRegistry {
+export interface WellKnown {
   ["/"]: any;
   [""]: any;
 }
 
 export interface MoreTypedClient {
-  get<P extends string = "/", T = TypeRegistryGet<Split<P, "/">[0]>>(
+  get<P extends string = "/", T = WellKnownGet<Split<P, "/">[0]>>(
     path: P
   ): Promise<T[]>;
 
   post<
     P extends string = "/",
-    T = TypeRegistryGet<Split<P, "/">[0]>,
+    T = WellKnownGet<Split<P, "/">[0]>,
     U = Partial<T>
   >(
     path: P,
@@ -440,14 +441,14 @@ export interface MoreTypedClient {
 
   patch<
     P extends string = "/",
-    T = TypeRegistryGet<Split<P, "/">[0]>,
+    T = WellKnownGet<Split<P, "/">[0]>,
     U = Partial<T>
   >(
     path: P,
     data: U
   ): Promise<T>;
 
-  delete<P extends string = "/", T = TypeRegistryGet<Split<P, "/">[0]>>(
+  delete<P extends string = "/", T = WellKnownGet<Split<P, "/">[0]>>(
     path: P
   ): Promise<T>;
 }
