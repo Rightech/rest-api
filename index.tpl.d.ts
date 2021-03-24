@@ -1,6 +1,6 @@
 /* ----- api/v1 ----- */
 
-interface BaseItem {}
+export interface BaseItem {}
 
 /// <_include path="@root/types/base.d.ts#ItemId" />
 /// <_include path="@root/types/base.d.ts#BaseItem" />
