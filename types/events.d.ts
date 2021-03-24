@@ -24,6 +24,20 @@ export interface Event<T = unknown> {
   data: T;
 }
 
+// https://github.com/cloudevents/spec/blob/v1.0.1/spec.md
+export interface CloudEventV1 {
+  specversion: "1.0";
+
+  id: string;
+  type: string;
+  source: string;
+
+  time: string;
+  subject: string;
+  datacontenttype: string;
+  data: string;
+}
+
 export type EventMessage<T> = Event<T> & {
   _v2: 1;
   _ctx?: ShortCtx;
