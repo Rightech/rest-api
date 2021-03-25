@@ -1,18 +1,18 @@
-export type ObjectId = string & {
-  getTimestamp(): Date;
+export type ObjectId = string & Partial<{
   toHexString(): string;
-  equals(other: ObjectId): boolean;
-};
+}>;
 
 export type ItemIdV1 = ObjectId;
 export type ItemId = ItemIdV1;
 
-export interface BaseItem {
-  _id: ItemId;
-
+export interface FreshItem {
   name: string;
   description?: string;
 
   owner: ItemId;
   group: ItemId;
+}
+
+export interface BaseItem extends FreshItem {
+  _id: ItemId;
 }
