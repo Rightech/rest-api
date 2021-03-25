@@ -22,13 +22,43 @@
 
 /* ----- api/v1/objects ----- */
 /// <_include path="@root/types/objects.d.ts#ServiceState" />
-/// <_include path="@root/types/objects.d.ts#BaseState" />
-/// <_include path="@root/types/objects.d.ts#BaseConfig" />
+/// <_include path="@root/types/objects.d.ts#GeographyState" />
+/// <_include path="@root/types/objects.d.ts#GeometryState" />
+/// <_include path="@root/types/objects.d.ts#GpsState" />
+/// <_include path="@root/types/objects.d.ts#MqttState" />
+/// <_include path="@root/types/objects.d.ts#State" />
+/// <_include path="@root/types/objects.d.ts#Config" />
+/// <_include path="@root/types/objects.d.ts#Packet" />
 /// <_include path="@root/types/objects.d.ts#RicObject" />
 /// <_include path="@root/types/objects.d.ts#Object" />
 
 /* ----- api/v1/events ----- */
 /// <_include path="@root/types/events.d.ts#Event" />
+
+/* ----- api/v1/geofences ----- */
+/// <_include path="@root/types/geofences.d.ts#Geography" />
+/// <_include path="@root/types/geofences.d.ts#GeographyType" />
+/// <_include path="@root/types/geofences.d.ts#Geopoint" />
+/// <_include path="@root/types/geofences.d.ts#Geoline" />
+/// <_include path="@root/types/geofences.d.ts#Georoute" />
+/// <_include path="@root/types/geofences.d.ts#Geoshape" />
+/// <_include path="@root/types/geofences.d.ts#Geofence" />
+
+/* ----- api/v1/scenes ----- */
+/// <_include path="@root/types/scenes.d.ts#Geometry" />
+/// <_include path="@root/types/scenes.d.ts#Room" />
+/// <_include path="@root/types/scenes.d.ts#Beacon" />
+/// <_include path="@root/types/scenes.d.ts#Floor" />
+/// <_include path="@root/types/scenes.d.ts#Scene" />
+
+/* ----- api/v1/roles ----- */
+/// <_include path="@root/types/roles.d.ts#Role" />
+
+/* ----- api/v1/groups ----- */
+/// <_include path="@root/types/groups.d.ts#Group" />
+
+/* ----- api/v1/users ----- */
+/// <_include path="@root/types/users.d.ts#User" />
 
 /* ----- api/v1/index ----- */
 /// <_include path="@root/types/index.d.ts#WellKnown" />
