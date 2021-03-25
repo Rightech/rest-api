@@ -1,4 +1,4 @@
-import type { BaseItem } from "./base";
+import type { Base } from "./base";
 
 export type BaseNode = {
   type: string;
@@ -50,7 +50,7 @@ export type ModelProps = {
   idPattern?: string;
 };
 
-export interface Model extends BaseItem {
+export interface Model extends Base {
   base: string;
   data: ModelNode;
   props?: ModelProps;

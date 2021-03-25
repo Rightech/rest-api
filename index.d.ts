@@ -1,17 +1,27 @@
 /* ----- api/v1 ----- */
 
-/** test comment */
-export type ItemId = string;
+export type ObjectId = string &
+  Partial<{
+    toHexString(): string;
+  }>;
 
-export interface BaseItem {
-  _id: ItemId;
+export type ItemIdV1 = ObjectId;
 
+export type ItemId = ItemIdV1;
+
+export interface Fresh {
   name: string;
   description?: string;
 
   owner: ItemId;
   group: ItemId;
 }
+
+export type Staged = Fresh & {
+  _id: ItemId;
+};
+
+export type Base = Staged;
 
 
 /* ----- api/v1/models ----- */
@@ -67,7 +77,7 @@ export type ModelProps = {
   idPattern?: string;
 };
 
-export interface Model extends BaseItem {
+export interface Model extends Base {
   base: string;
   data: ModelNode;
   props?: ModelProps;
@@ -81,7 +91,7 @@ export type ServiceState = {
   _gid: ItemId;
   time: number;
   online: boolean;
-}
+};
 
 export type BaseState = ServiceState & {
   [argumentId: string]: number | boolean | string | BaseState;
@@ -94,7 +104,7 @@ export type BaseConfig = {
 };
 
 export interface RicObject<TState = BaseState, TConfig = BaseConfig>
-  extends BaseItem {
+  extends Base {
   id: string;
   model: ItemId;
 
@@ -127,7 +137,7 @@ export interface Event<T = unknown> {
 
 /* ----- api/v1/index ----- */
 export interface WellKnown {
-  base: BaseItem;
+  base: Base;
 
   models: Model;
   objects: RicObject;

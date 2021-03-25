@@ -1,7 +1,11 @@
 /* ----- api/v1 ----- */
 
+/// <_include path="@root/types/base.d.ts#ObjectId" />
+/// <_include path="@root/types/base.d.ts#ItemIdV1" />
 /// <_include path="@root/types/base.d.ts#ItemId" />
-/// <_include path="@root/types/base.d.ts#BaseItem" />
+/// <_include path="@root/types/base.d.ts#Fresh" />
+/// <_include path="@root/types/base.d.ts#Staged" />
+/// <_include path="@root/types/base.d.ts#Base" />
 
 /* ----- api/v1/models ----- */
 

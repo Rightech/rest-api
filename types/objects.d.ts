@@ -1,4 +1,4 @@
-import type { BaseItem, ItemId } from "./base";
+import type { Base, ItemId } from "./base";
 
 export type ServiceState = {
   _ts: number;
@@ -6,7 +6,7 @@ export type ServiceState = {
   _gid: ItemId;
   time: number;
   online: boolean;
-}
+};
 
 export type BaseState = ServiceState & {
   [argumentId: string]: number | boolean | string | BaseState;
@@ -19,7 +19,7 @@ export type BaseConfig = {
 };
 
 export interface RicObject<TState = BaseState, TConfig = BaseConfig>
-  extends BaseItem {
+  extends Base {
   id: string;
   model: ItemId;
 

@@ -1,11 +1,12 @@
-export type ObjectId = string & Partial<{
-  toHexString(): string;
-}>;
+export type ObjectId = string &
+  Partial<{
+    toHexString(): string;
+  }>;
 
 export type ItemIdV1 = ObjectId;
 export type ItemId = ItemIdV1;
 
-export interface FreshItem {
+export interface Fresh {
   name: string;
   description?: string;
 
@@ -13,6 +14,8 @@ export interface FreshItem {
   group: ItemId;
 }
 
-export interface BaseItem extends FreshItem {
+export type Staged = Fresh & {
   _id: ItemId;
-}
+};
+
+export type Base = Staged;
