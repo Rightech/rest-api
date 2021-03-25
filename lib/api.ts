@@ -66,7 +66,7 @@ export class ApiError extends Error implements ApiError {
   }
 
   withHelper(helper: ApiErrorHelper) {
-    this.helper = helper;
+    this.helper = { ...this.helper, ...(helper || {}) };
     if (this.helper && this.helper.message) {
       this.message = `${this.message}. ${this.helper.message}`;
     }
@@ -93,7 +93,7 @@ export class ApiError extends Error implements ApiError {
   static fromJson(opts: RequestOptions, json: ApiError, statusCode = 500) {
     return new ApiError(json.message)
       .withCode(statusCode)
-      .withHelper(json.helper || {})
+      .withHelper(json.helper)
       .withVerb(opts.method)
       .withUrl(opts.url)
       .withTags(json.tags);
