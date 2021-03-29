@@ -1,7 +1,6 @@
 import type { Base, ItemId } from "./base";
 
 export type ServiceState = {
-  _v: number;
   _ts: number;
   _oid: ItemId;
   _gid: ItemId;
@@ -34,10 +33,11 @@ export type MqttState = {
   payload: string;
 };
 
-export type State = ServiceState &
-  GpsState &
-  MqttState &
-  GeometryState & {
+export type State = ServiceState
+  & GpsState
+  & MqttState 
+  & GeometryState 
+  & {
     [argumentId: string]: number | boolean | string;
   };
 
@@ -53,7 +53,7 @@ export interface RicObject<TState = State, TConfig = Config> extends Base {
   id: string;
   model: ItemId;
 
-  state?: TState;
+  state?: Readonly<TState>;
   config?: TConfig;
 }
 

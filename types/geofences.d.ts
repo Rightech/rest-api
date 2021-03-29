@@ -26,7 +26,7 @@ export type Georoute = {
   path: { name: string; geoline: string }[];
 };
 
-export type Geoshape = Geopoint | Geoline | Georoute;
+export type Geoshape = Geopoint | Geoline;
 
 export interface Geofence extends Base {
   color?: string;

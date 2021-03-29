@@ -10,13 +10,30 @@ path: developers/http-api/objects
 [JSON Schema](https://github.com/Rightech/rest-api/blob/master/oas3/schemas/objects.yaml)
 [Type Definitions](https://github.com/Rightech/rest-api/blob/master/types/objects.d.ts)
 
-```ts
-import type { ItemId, BaseItem } from "@rightech/api";
+### Object item
 
+```ts
+import type { ItemId, Base, State, Config } from "@rightech/api";
+
+export interface RicObject extends Base {
+  id: string;
+  model: ItemId;
+
+  state?: Readonly<State>;
+  config?: Config;
+}
+```
+
+### Object state
+
+```ts
 /// <_include path="@root/types/objects.d.ts#ServiceState" />
-/// <_include path="@root/types/objects.d.ts#BaseState" />
-/// <_include path="@root/types/objects.d.ts#BaseConfig" />
-/// <_include path="@root/types/objects.d.ts#RicObject" />
+/// <_include path="@root/types/objects.d.ts#GeographyState" />
+/// <_include path="@root/types/objects.d.ts#GeometryState" />
+/// <_include path="@root/types/objects.d.ts#GpsState" />
+/// <_include path="@root/types/objects.d.ts#MqttState" />
+/// <_include path="@root/types/objects.d.ts#State" />
+/// <_include path="@root/types/objects.d.ts#Config" />
 ```
 
 ## Default API
@@ -37,9 +54,9 @@ GET /objects/:id? HTTP/1.1
 POST /objects HTTP/1.1
 
 {
-    "model": "<model-id>",
-    "id": "test-object-01",
-    "name": "test-object-01",
+  "model": "<model-id>",
+  "id": "test-object-01",
+  "name": "test-object-01",
 }
 ```
 
@@ -49,7 +66,7 @@ POST /objects HTTP/1.1
 PATCH /object/:id HTTP/1.1
 
 {
-    "name": "test-object-01.00",
+  "name": "test-object-01.00",
 }
 ```
 
@@ -59,15 +76,23 @@ PATCH /object/:id HTTP/1.1
 DELETE /object/:id HTTP/1.1
 ```
 
+## Commands API
+
+### Send command to object { id="POST /objects/:id/commands/:command" }
+
+```http
+POST /objects/:id/commands/:command HTTP/1.1
+
+{
+  "topic": "test",
+  "payload": "hi"
+}
+```
 
 ## Journal API
 
-```
-// TODO: gen TOC here
-```
+### Get packets history { id="GET /objects/:id/packets" }
 
-## Commands API
-
-```
-// TODO: gen TOC here
+```http
+GET /objects/:id/packets HTTP/1.1
 ```

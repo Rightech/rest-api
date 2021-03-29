@@ -5,10 +5,24 @@ locale: en
 path: developers/http-api/models
 ---
 
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
+
 ## Type definitions { #types }
 
 [JSON Schema](https://github.com/Rightech/rest-api/blob/master/oas3/schemas/models.yaml)
 [Type Definitions](https://github.com/Rightech/rest-api/blob/master/types/models.d.ts)
+
+### Model item
+
+```ts
+import type { Base, ModelNode } from "@rightech/api";
+
+/// <_include path="@root/types/models.d.ts#ModelProps" />
+/// <_include path="@root/types/models.d.ts#Model" />
+```
 
 ### Model nodes
 
@@ -20,15 +34,6 @@ path: developers/http-api/models
 /// <_include path="@root/types/models.d.ts#ArgumentNode" />
 /// <_include path="@root/types/models.d.ts#ArgumentDataType" />
 /// <_include path="@root/types/models.d.ts#ModelNode" />
-```
-
-### Model item
-
-```ts
-import type { BaseItem, ModelNode } from "@rightech/api";
-
-/// <_include path="@root/types/models.d.ts#ModelProps" />
-/// <_include path="@root/types/models.d.ts#Model" />
 ```
 
 ## Models API
@@ -48,11 +53,12 @@ GET /models/base HTTP/1.1
 ```http
 GET /models HTTP/1.1
 ```
+
 ```typescript
 import { getClient } from "@rightech/api";
 
 const api = getClient();
-const models = await api.get('models');
+const models = await api.get("models");
 
 console.log(models);
 ```
@@ -63,8 +69,8 @@ console.log(models);
 POST /models HTTP/1.1
 
 {
-    "base": "mqtt",
-    "name": "test-model-01",
+  "base": "mqtt",
+  "name": "test-model-01",
 }
 ```
 
@@ -74,7 +80,7 @@ POST /models HTTP/1.1
 PATCH /models/:id HTTP/1.1
 
 {
-    "name": "test-model-01.00",
+  "name": "test-model-01.00",
 }
 ```
 
@@ -103,11 +109,11 @@ DELETE /models/:id HTTP/1.1
 POST /models/:id/nodes HTTP/1.1
 
 {
-    "id": "floorTemperature",
-    "type": "argument",
-    "name": "Floor Temperature",
-    "unit": "temperature-celsius",
-    "dataType": "number",
+  "id": "floorTemperature",
+  "type": "argument",
+  "name": "Floor Temperature",
+  "unit": "temperature-celsius",
+  "dataType": "number",
 }
 ```
 
@@ -117,8 +123,8 @@ POST /models/:id/nodes HTTP/1.1
 PATCH /models/:id/nodes/:node HTTP/1.1
 
 {
-    "name": "Floor Temperature (in Fahrenheits)",
-    "unit": "temperature-fahrenheit"
+  "name": "Floor Temperature (in Fahrenheits)",
+  "unit": "temperature-fahrenheit"
 }
 ```
 
