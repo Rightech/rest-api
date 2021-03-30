@@ -10,12 +10,17 @@ export interface Fresh {
   name: string;
   description?: string;
 
-  owner: ItemId;
-  group: ItemId;
+  owner?: ItemId;
+  group?: ItemId;
 }
 
-export type Staged = Fresh & {
-  _id: ItemId;
-};
+// type Base = Fresh & { _id: ItemId };
 
-export type Base = Staged;
+export interface Base {
+  _id: ItemId;
+  name: string;
+  description?: string;
+
+  owner?: ItemId;
+  group?: ItemId;
+}
