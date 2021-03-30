@@ -3,6 +3,7 @@ title: Objects
 author: prohazko
 locale: en
 path: developers/http-api/objects
+toc: true
 ---
 
 ## Type definitions { #types }
@@ -37,10 +38,6 @@ export interface RicObject extends Base {
 ```
 
 ## Default API
-
-```
-// TODO: gen TOC here
-```
 
 ### Get objects { id="GET /objects/:id?" }
 

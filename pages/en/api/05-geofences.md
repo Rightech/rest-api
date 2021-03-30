@@ -3,6 +3,7 @@ title: Geofences
 author: prohazko
 locale: en
 path: developers/http-api/geofences
+toc: true
 ---
 
 ## Type definitions { #types }
@@ -43,10 +44,6 @@ POST /objects/:id/geofences/:geofence/stop HTTP/1.1
 ```
 
 ## Default API
-
-```
-// TODO: gen TOC here
-```
 
 ### Get geofences { id="GET /geofences/:id?" }
 

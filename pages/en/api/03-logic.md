@@ -3,6 +3,7 @@ title: Logic
 author: prohazko
 locale: en
 path: developers/http-api/logic
+toc: true
 ---
 
 ## Type definitions { #types }
@@ -33,10 +34,6 @@ POST /objects/:id/automatons/:automaton/stop HTTP/1.1
 ```
 
 ## Default API
-
-```
-// TODO: gen TOC here
-```
 
 ### Get automatons { id="GET /automatons/:id?" }
 

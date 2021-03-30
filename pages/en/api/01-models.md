@@ -3,12 +3,8 @@ title: Models
 author: prohazko
 locale: en
 path: developers/http-api/models
+toc: true
 ---
-
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
 
 ## Type definitions { #types }
 
@@ -37,10 +33,6 @@ import type { Base, ModelNode } from "@rightech/api";
 ```
 
 ## Models API
-
-```
-// TODO: gen TOC here
-```
 
 ### Get base models { id="GET /models/base" }
 
@@ -91,10 +83,6 @@ DELETE /models/:id HTTP/1.1
 ```
 
 ## Model nodes API
-
-```
-// TODO: gen TOC here
-```
 
 ### Attach model node { id="POST /models/:id/nodes" }
 

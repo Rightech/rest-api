@@ -3,6 +3,7 @@ title: Handlers
 author: prohazko
 locale: en
 path: developers/http-api/handlers
+toc: true
 ---
 
 ## Type definitions { #types }
@@ -33,10 +34,6 @@ POST /objects/:id/handlers/:handler/stop HTTP/1.1
 ```
 
 ## Default API
-
-```
-// TODO: gen TOC here
-```
 
 ### Get handlers { id="GET /handlers/:id?" }
 
