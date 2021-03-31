@@ -3,8 +3,8 @@
 /// <_include path="@root/types/base.d.ts#ObjectId" />
 /// <_include path="@root/types/base.d.ts#ItemIdV1" />
 /// <_include path="@root/types/base.d.ts#ItemId" />
-/// <_include path="@root/types/base.d.ts#Fresh" />
 /// <_include path="@root/types/base.d.ts#Base" />
+/// <_include path="@root/types/base.d.ts#Fresh" />
 
 /* ----- api/v1/models ----- */
 

@@ -6,16 +6,6 @@ export type ObjectId = string &
 export type ItemIdV1 = ObjectId;
 export type ItemId = ItemIdV1;
 
-export interface Fresh {
-  name: string;
-  description?: string;
-
-  owner?: ItemId;
-  group?: ItemId;
-}
-
-// type Base = Fresh & { _id: ItemId };
-
 export interface Base {
   _id: ItemId;
   name: string;
@@ -24,3 +14,5 @@ export interface Base {
   owner?: ItemId;
   group?: ItemId;
 }
+
+export type Fresh = Omit<Base, "_id">;
