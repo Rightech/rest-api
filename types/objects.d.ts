@@ -1,6 +1,7 @@
 import type { Base, ItemId } from "./base";
 
 export type ServiceState = {
+  _v: number;
   _ts: number;
   _oid: ItemId;
   _gid: ItemId;

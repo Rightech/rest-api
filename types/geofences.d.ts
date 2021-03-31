@@ -9,7 +9,8 @@ export type GeographyType =
   | "marker"
   | "circle"
   | "rectangle"
-  | "route";
+  | "route"
+  | string;
 
 export type Geopoint = {
   type: "marker" | "circle";
@@ -21,12 +22,24 @@ export type Geoline = {
   points: Geography[];
 };
 
-export type Georoute = {
-  type: "route";
-  path: { name: string; geoline: string }[];
+export type Waypoint = {
+  center: Geography;
+  name: string;
+  check?: boolean;
 };
 
-export type Geoshape = Geopoint | Geoline;
+export type GeorouteTrip = {
+  type: "direct" | "return";
+  points: Geography[];
+  waypoints: Waypoint[];
+};
+
+export type Georoute = {
+  type: "route";
+  trips: GeorouteTrip[];
+};
+
+export type Geoshape = Geopoint | Geoline | Georoute;
 
 export interface Geofence extends Base {
   color?: string;
