@@ -5,6 +5,7 @@
 /// <_include path="@root/types/base.d.ts#ItemId" />
 /// <_include path="@root/types/base.d.ts#Base" />
 /// <_include path="@root/types/base.d.ts#Fresh" />
+/// <_include path="@root/types/base.d.ts#Link" />
 
 /* ----- api/v1/models ----- */
 
