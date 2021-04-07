@@ -536,11 +536,8 @@ export interface Client {
   patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
   delete<T = unknown>(path: string): Promise<T>;
 
+  /** query params stringification helper */
   qs(params: Record<string, string | string[] | number>): string;
-
-  /* ↓ not part of api right now, 
-       very unstable, so experimental, much discouraged */
-  getStream<T = unknown>(path: string): Promise<StreamReader<T>>;
 }
 
 export class Client implements Client {

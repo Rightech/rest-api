@@ -347,10 +347,13 @@ export interface ClientOpts {
 export interface Client {
   new (opts?: ClientOpts): Client;
 
-  get<T = unknown>(path: string): Promise<T[]>;
+  get<T = unknown>(path: string): Promise<T>;
   post<T = unknown>(path: string, data: Partial<T>): Promise<T>;
   patch<T = unknown>(path: string, data: Partial<T>): Promise<T>;
   delete<T = unknown>(path: string): Promise<T>;
+
+  /** query params stringification helper */
+  qs(params: Record<string, string | string[] | number>): string;
 }
 
 type Split<S extends string, D extends string> = string extends S
