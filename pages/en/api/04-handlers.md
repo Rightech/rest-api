@@ -48,7 +48,7 @@ POST /handlers HTTP/1.1
 
 {
   "name": "test-handler-01",
-  "userCode": "function process(a, b) { return a + b }"
+  "userCode": "function process(a, b) { return { sum: a + b } }"
 }
 ```
 
