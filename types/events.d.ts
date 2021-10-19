@@ -17,6 +17,7 @@ export interface Event<T = unknown> {
   _msgid: string;
   _oid?: ItemId;
   _gid?: ItemId;
+  _org?: ItemId;
 
   service?: string;
   event: string;
