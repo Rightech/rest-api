@@ -61,6 +61,12 @@ export interface Task extends Base {
    */
   assignee: ItemId;
 
+  /*
+   * 0 - critical (reserved)
+   * 1 - high
+   * 2 - medium
+   * 3 - low
+   */
   priority: 1 | 2 | 3 | number;
   status: TaskStatus;
 
