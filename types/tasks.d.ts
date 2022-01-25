@@ -83,7 +83,7 @@ export interface Task extends Base {
   report?: TaskReport;
   review?: TaskReview;
 
-  //deadlines: TaskDeadline[];
+  deadlines?: Record<TaskStatus, TaskDeadline>;
 
   location?: {
     begin?: TaskLocation;
