@@ -1,14 +1,22 @@
 import type { Base, ItemId } from "./base";
 
+export type TaskReportFieldConfig = {
+  type: "number" | "boolean" | "string" | string;
+  name: string;
+  description?: string;
+  required?: boolean;
+};
+
 export interface TaskKind extends Base {
   svg: string;
   reportConfig?: {
-    name: string;
-    title: string;
-    type: "number" | "boolean" | "string" | string;
-    required?: boolean;
-  }[];
-  statusConfig?: unknown;
+    filesRequired?: number;
+    fields?: TaskReportFieldConfig[];
+  };
+  statusConfig?: {
+    checkStatus?: boolean;
+    actions?: Record<string, string[]>;
+  };
 }
 
 export type TaskStatus = "created" | "assigned" | "inwork" | "closed" | string;
