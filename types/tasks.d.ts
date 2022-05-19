@@ -25,6 +25,7 @@ export type TaskResult = "done" | "rejected" | string;
 export type TaskReport = {
   result: TaskResult;
   fields: TaskReportField[];
+  comment?: string;
 };
 
 export type TaskReportField = {
